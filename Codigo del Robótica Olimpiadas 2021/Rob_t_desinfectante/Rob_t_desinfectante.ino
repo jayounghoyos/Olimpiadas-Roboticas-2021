@@ -18,119 +18,131 @@ const int LED = 13;
 
 int tiempo;
 int distancia_cm;
+bool isInitialized = false;
 
 void setup() {
-    BT.begin(9600);
 
-    pinMode(GiroM1, OUTPUT);
-    pinMode(ActivarM1, OUTPUT);
+  BT.begin(9600);
 
-    pinMode(GiroM2, OUTPUT);
-    pinMode(ActivarM2, OUTPUT);
+  pinMode(GiroM1, OUTPUT);
+  pinMode(ActivarM1, OUTPUT);
 
-    pinMode(LED, OUTPUT);
+  pinMode(GiroM2, OUTPUT);
+  pinMode(ActivarM2, OUTPUT);
 
-    pinMode(GiroM3, OUTPUT);
-    pinMode(ActivarM3, OUTPUT);
+  pinMode(LED, OUTPUT);
 
-    pinMode(TriggerPin, OUTPUT);
-    pinMode(EchoPin, INPUT);
+  pinMode(GiroM3, OUTPUT);
+  pinMode(ActivarM3, OUTPUT);
 
-    // Initial State
-    detener();
-    digitalWrite(LED, LOW);
+  pinMode(TriggerPin, OUTPUT);
+  pinMode(EchoPin, INPUT);
+
+  // Initial State
+  detener();
+  digitalWrite(LED, LOW);
 }
 
 void loop() {
-    digitalWrite(TriggerPin, LOW);
-    delayMicroseconds(4);
+  digitalWrite(TriggerPin, LOW);
+  delayMicroseconds(4);
 
-    digitalWrite(TriggerPin, HIGH);
-    delayMicroseconds(10);
+  digitalWrite(TriggerPin, HIGH);
+  delayMicroseconds(10);
 
-    tiempo = pulseIn(EchoPin, HIGH);
-    distancia_cm = 0.01715 * tiempo;
+  tiempo = pulseIn(EchoPin, HIGH);
+  distancia_cm = 0.01715 * tiempo;
 
-    digitalWrite(LED, LOW);
-    delay(100);
+  delay(100);
 
-    if (BT.available()) {
-        switch (BT.read()) {
-            case 'A':
-                adelante();
-                break;
-            case 'a':
-                derecha();
-                break;
-            case 'I':
-                izquierda();
-                break;
-            case 'D':
-                atras();
-                break;
-            case 'S':
-                detener();
-                break;
-        }
-    }
-
-    if (distancia_cm < 15) {
+  if (BT.available()) {
+    switch (BT.read()) {
+      case 'A':
+        adelante();
+        break;
+      case 'a':
+        derecha();
+        break;
+      case 'I':
+        izquierda();
+        break;
+      case 'D':
+        atras();
+        break;
+      case 'S':
         detener();
-        digitalWrite(LED, HIGH);
-        exprimir();
-        delay(3000);
-        subir();
-        delay(3000);
+        break;
+      default:
         detener();
+        break;
     }
+  }
+
+  if (distancia_cm < 5) {
+    if (!isInitialized) {
+      isInitialized = true;
+    } else {
+      detener();
+      digitalWrite(LED, HIGH);
+      exprimir();
+      delay(3000);
+      subir();
+      delay(3000);
+      detener();
+      digitalWrite(LED, LOW);
+    }
+  }
 }
 
 void atras() {
-    detener();
-    digitalWrite(GiroM1, LOW);
-    digitalWrite(ActivarM1, HIGH);
-    digitalWrite(ActivarM2, HIGH);
-    digitalWrite(GiroM2, HIGH);
+  detener();
+  digitalWrite(GiroM1, LOW);
+  digitalWrite(ActivarM1, HIGH);
+  digitalWrite(ActivarM2, HIGH);
+  digitalWrite(GiroM2, HIGH);
 }
 
 void izquierda() {
-    detener();
-    digitalWrite(GiroM1, LOW);
-    digitalWrite(ActivarM1, HIGH);
-    digitalWrite(ActivarM2, HIGH);
-    digitalWrite(GiroM2, LOW);
+  detener();
+  digitalWrite(GiroM1, LOW);
+  digitalWrite(ActivarM1, HIGH);
+  digitalWrite(ActivarM2, HIGH);
+  digitalWrite(GiroM2, LOW);
 }
 
 void derecha() {
-    detener();
-    digitalWrite(GiroM1, HIGH);
-    digitalWrite(ActivarM1, HIGH);
-    digitalWrite(ActivarM2, HIGH);
-    digitalWrite(GiroM2, HIGH);
+  detener();
+  digitalWrite(GiroM1, HIGH);
+  digitalWrite(ActivarM1, HIGH);
+  digitalWrite(ActivarM2, HIGH);
+  digitalWrite(GiroM2, HIGH);
 }
 
 void adelante() {
-    detener();
-    digitalWrite(GiroM1, HIGH);
-    digitalWrite(ActivarM1, HIGH);
-    digitalWrite(ActivarM2, HIGH);
-    digitalWrite(GiroM2, LOW);
+  detener();
+  digitalWrite(GiroM1, HIGH);
+  digitalWrite(ActivarM1, HIGH);
+  digitalWrite(ActivarM2, HIGH);
+  digitalWrite(GiroM2, LOW);
 }
 
 void exprimir() {
-    detener();
-    digitalWrite(ActivarM3, LOW);
-    digitalWrite(GiroM3, HIGH);
+  detener();
+  digitalWrite(ActivarM3, LOW);
+  digitalWrite(GiroM3, HIGH);
 }
 
 void subir() {
-    detener();
-    digitalWrite(ActivarM3, HIGH);
-    digitalWrite(GiroM3, LOW);
+  detener();
+  digitalWrite(ActivarM3, HIGH);
+  digitalWrite(GiroM3, HIGH);
 }
 
 void detener() {
-    digitalWrite(ActivarM1, LOW);
-    digitalWrite(ActivarM2, LOW);
-    digitalWrite(ActivarM3, LOW);
+  digitalWrite(ActivarM1, LOW);
+  digitalWrite(ActivarM2, LOW);
+  digitalWrite(ActivarM3, LOW);
+  digitalWrite(GiroM1, LOW);
+  digitalWrite(GiroM2, LOW);
+  digitalWrite(GiroM3, LOW);
 }
