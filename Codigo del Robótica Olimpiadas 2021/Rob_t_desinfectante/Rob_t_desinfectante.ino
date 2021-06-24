@@ -125,8 +125,8 @@ void exprimir() {
 
 void subir() {
     detener();
-    digitalWrite(GiroM3, HIGH);
     digitalWrite(ActivarM3, HIGH);
+    digitalWrite(GiroM3, LOW);
 }
 
 void detener() {
