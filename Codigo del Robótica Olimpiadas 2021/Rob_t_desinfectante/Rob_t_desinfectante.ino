@@ -44,6 +44,9 @@ void setup() {
 }
 
 void loop() {
+
+  //codigo para que constantemente revise si hay un objeto en frente
+  
   digitalWrite(TriggerPin, LOW);
   delayMicroseconds(4);
 
@@ -55,10 +58,10 @@ void loop() {
 
   delay(100);
 
-  if (BT.available()) {
+  if (BT.available()) {  //Revisando si si está activado
     switch (BT.read()) {
       case 'A':
-        adelante();
+        adelante();     //usando las funciones siempre que se presionen los botones de la app
         break;
       case 'a':
         derecha();
@@ -80,14 +83,12 @@ void loop() {
 
   if (distancia_cm < 5) {
     if (!isInitialized) {
-      isInitialized = true;
+      isInitialized = true; //Pequeño lapso de espera
     } else {
-      detener();
+      detener();  //Funciones para el movimiento del desinfectante
       digitalWrite(LED, HIGH);
       exprimir();
-      delay(3000);
-      subir();
-      delay(3000);
+      delay(2000);
       detener();
       digitalWrite(LED, LOW);
     }
@@ -125,16 +126,9 @@ void adelante() {
   digitalWrite(ActivarM2, HIGH);
   digitalWrite(GiroM2, LOW);
 }
-
 void exprimir() {
   detener();
   digitalWrite(ActivarM3, LOW);
-  digitalWrite(GiroM3, HIGH);
-}
-
-void subir() {
-  detener();
-  digitalWrite(ActivarM3, HIGH);
   digitalWrite(GiroM3, HIGH);
 }
 
